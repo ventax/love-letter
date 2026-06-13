@@ -190,9 +190,11 @@ const Audio = (() => {
 (function initTypewriter() {
   const el = document.getElementById('typewriter');
   const lines = [
-    'Dari seseorang yang mencintaimu sepenuh hati 💛',
-    'Kamu adalah kuning hangat di hidupku ☀️',
-    'Yang paling aku sayang, selamanya 🐾',
+    'ini buat kamu, Chi 💛',
+    'you mean more than you know, bee ☀️',
+    'yang paling aku sayang, si kuning 🐾',
+    'glad you exist, seriously 🐱',
+    'tiap hari sama bee itu worth it 💛',
   ];
   let lineIdx = 0, charIdx = 0, deleting = false;
 
@@ -298,7 +300,7 @@ document.querySelectorAll('.quote-card').forEach(card => {
 });
 
 // ======================================================
-// 9. PHOTO GALLERY — Upload + Lightbox + Sound
+// 9. PHOTO GALLERY — Pre-loaded + Lightbox + Sound
 // ======================================================
 (function initGallery() {
   const items    = document.querySelectorAll('.gallery-item');
@@ -308,33 +310,33 @@ document.querySelectorAll('.quote-card').forEach(card => {
   const lbCap    = document.getElementById('lightbox-caption');
   const lbClose  = document.getElementById('lightbox-close');
 
-  // Caption texts
+  // Caption texts (updated)
   const captions = {
-    1: 'Chitato dan kucing — kombinasi terfavorit di dunia 🐾',
-    2: 'Cantik seperti bunga matahari ✨',
-    3: 'Senyummu yang selalu kukangenin 💞',
-    4: 'Waktu paling berharga — bersamamu 💛',
-    5: 'Lucu banget, seperti biasanya 🥰',
-    6: 'Setiap momen bersamamu selalu spesial ✨',
+    1: 'combo paling wholesome yang pernah ada 🐾',
+    2: 'muka yang sama yang bikin aku senyum sendiri ✨',
+    3: 'senyum ini yang aku kangeni pas lagi jauh 💞',
+    4: 'oh my fineshytt kamu secantik itu 💛',
+    5: 'honestly ini salah satu yang bikin aku jatuh cinta 🥰',
+    6: 'ga ada yang biasa-biasa kalau sama kamu ✨',
   };
 
-  // Per-item: store uploaded image src
+  // Per-item: store src (pre-loaded or uploaded)
   const photos = {};
 
   items.forEach(item => {
     const idx = item.dataset.index;
-    const fileInput = document.createElement('input');
-    fileInput.type = 'file';
-    fileInput.accept = 'image/*';
-    fileInput.style.display = 'none';
-    item.appendChild(fileInput);
+
+    // If item already has a data-src (pre-loaded photo), register it
+    if (item.dataset.src) {
+      photos[idx] = item.dataset.src;
+    }
 
     item.addEventListener('click', () => {
       if (photos[idx]) {
-        // Has photo → open lightbox
+        // Has photo → open lightbox with meow + sparkle
         openLightbox(photos[idx], captions[idx]);
       } else {
-        // No photo → trigger upload
+        // No photo yet → trigger upload
         Audio.meow();
         fileInput.click();
       }
@@ -344,6 +346,13 @@ document.querySelectorAll('.quote-card').forEach(card => {
       if (e.key === 'Enter' || e.key === ' ') item.click();
     });
 
+    // Still allow upload by double-clicking empty slots in the future
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = 'image/*';
+    fileInput.style.display = 'none';
+    item.appendChild(fileInput);
+
     fileInput.addEventListener('change', function () {
       const file = this.files[0];
       if (!file) return;
@@ -352,24 +361,19 @@ document.querySelectorAll('.quote-card').forEach(card => {
       reader.onload = e => {
         photos[idx] = e.target.result;
 
-        // Update placeholder with image
         const placeholder = item.querySelector('.photo-placeholder');
         const img = document.createElement('img');
         img.src = e.target.result;
-        img.alt = 'Foto Chitato';
-        img.style.cssText = `
-          width:100%;height:100%;
-          object-fit:cover;border-radius:14px;display:block;
-        `;
+        img.alt = 'Foto Chi';
+        img.style.cssText = `width:100%;height:100%;object-fit:cover;border-radius:14px;display:block;`;
         placeholder.innerHTML = '';
         placeholder.appendChild(img);
         placeholder.style.border = 'none';
         placeholder.style.background = 'transparent';
         item.classList.add('has-photo');
 
-        // Sound + celebration
         Audio.success();
-        showToast('Foto Chitato berhasil ditambahkan! 💛🐾');
+        showToast('foto Chi masuk! cakep banget 💛🐾');
         burstSparkles(item);
       };
       reader.readAsDataURL(file);
